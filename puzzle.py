@@ -33,15 +33,6 @@ import os
 board = None
 dirs = ['w', 's', 'a', 'd']
 
-win8 = [[' ', 1, 2], [3, 4, 5], [6, 7, 8]]
-win82 = [[1, 2, 3], [4, 5, 6], [7, 8, ' ']]
-
-win15 = [[' ', 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15]]
-win152 = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, ' ']]
-
-win24 = [[' ', 1, 2, 3, 4], [5, 6, 7, 8, 9], [10, 11, 12, 13, 14], [15, 16, 17, 18, 19], [20, 21, 22, 23, 24]]
-win242 = [[1, 2, 3, 4, 5], ]
-
 def getEmpty(boardArray):
 
 	for row in range(len(boardArray)):
@@ -60,7 +51,21 @@ def createWins():
 	numbers.extend([i for i in range(1, board.size * board.size)])
 	win2 = [[numbers.pop(0) for col in range(board.size)] for row in range(board.size)]
 
-	return [win1, win2]
+	numbers = [i for i in range(1, board.size * board.size)]
+	numbers.append(' ')
+	win3 = [[numbers.pop(0) for col in range(board.size)] for row in range(board.size)]
+	for i in range(board.size):
+		win3[i].reverse()
+
+	numbers = [' ']
+	numbers.extend([i for i in range(1, board.size * board.size)])
+	win4 = [[numbers.pop(0) for col in range(board.size)] for row in range(board.size)]
+	for i in range(board.size):
+		win4[i].reverse()
+
+	wins = [win1, win2, win3, win4]
+
+	return wins
 
 class gameBoard:
 	"""
