@@ -1,6 +1,6 @@
 """
 Author: Robert Bond <rjb8682@rit.edu>
-File: 8.py
+File: puzzle.py
 Description: This program will allow the user to play the 8-puzzle
 			 game through the command line
 
@@ -28,7 +28,9 @@ Description: This program will allow the user to play the 8-puzzle
 
 """
 from random import shuffle
+from copy import deepcopy
 import os
+import sys
 
 board = None
 dirs = ['w', 's', 'a', 'd']
@@ -150,43 +152,60 @@ def move(dir):
 	drawScreen()
 
 def printHelp():
+	os.system('cls' if os.name == 'nt' else 'clear')
+	drawScreen()
+	print('To play:')
+	print('\tEnter a command for it to run unless not on windows.')
+	print('\t\tIf not on windows, type command then press enter.')
+	print()
 	print('Commands:')
 	print("\t'w'/'a'/'s'/'d' - Moving the empty space")
-	print("\t'esc' - exit the progam")
+	print("\t'esc (on windows) or 'b'' - exit the progam")
 	print("\t'?' - for this list\n")
 
 class _Getch:
-    """
-    Gets a single character from standard input.  Does not echo to the
-    screen.
-    """
-    def __init__(self):
-        self.impl = _GetchWindows()
+	"""
+	Gets a single character from standard input.  Does not echo to the
+	screen.
+	"""
+	def __init__(self):
+		self.impl = _GetchWindows()
 
-    def __call__(self): return self.impl()
+	def __call__(self): return self.impl()
 
 class _GetchWindows:
-    def __init__(self):
-        import msvcrt
+	def __init__(self):
+		import msvcrt
 
-    def __call__(self):
-        import msvcrt
-        return msvcrt.getch()
+	def __call__(self):
+		import msvcrt
+		return msvcrt.getch()
 
 def main():
 	os.system("title " + "Python - Number Puzzle")
 
 	global board
 	os.system('cls' if os.name == 'nt' else 'clear')
-	size = int(input('What size board? '))
+	if len(sys.argv) == 1:
+		size = int(input('What size board? '))
+	else:
+		size = int(sys.argv[1])
 	board = gameBoard(size)
 	board.win = createWins()
 	drawScreen()
-	get = _Getch()
+	if os.name == 'nt':
+		get = _Getch()
+	else:
+		get = None
 
 	while True:
-		command = str(get())[-2]
-		process = processInput(command)
+		cmd = None
+		if get != None:
+			cmd = str(get())[-2]
+		else:
+			cmd = input()
+
+		process = processInput(cmd)
 
 		if process == 0:
 			return
